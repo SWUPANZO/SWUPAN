@@ -13,6 +13,7 @@
 		CD00899A1EC199FF00583FA6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CD0089991EC199FF00583FA6 /* GoogleService-Info.plist */; };
 		CD0100431E9E3D3E00DA9996 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD0100421E9E3D3E00DA9996 /* AVFoundation.framework */; };
 		CD0100491E9E477500DA9996 /* audioRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0100481E9E477500DA9996 /* audioRecordViewController.m */; };
+		CD0915891EC826B700CA07C4 /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0915881EC826B700CA07C4 /* SignInViewController.m */; };
 		CD10935B1E935DB8006CE9A2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD10935A1E935DB8006CE9A2 /* main.m */; };
 		CD10935E1E935DB8006CE9A2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CD10935D1E935DB8006CE9A2 /* AppDelegate.m */; };
 		CD1093611E935DB8006CE9A2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD1093601E935DB8006CE9A2 /* ViewController.m */; };
@@ -59,6 +60,8 @@
 		CD0100421E9E3D3E00DA9996 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CD0100471E9E477500DA9996 /* audioRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audioRecordViewController.h; sourceTree = "<group>"; };
 		CD0100481E9E477500DA9996 /* audioRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = audioRecordViewController.m; sourceTree = "<group>"; };
+		CD0915871EC826B700CA07C4 /* SignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignInViewController.h; sourceTree = "<group>"; };
+		CD0915881EC826B700CA07C4 /* SignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInViewController.m; sourceTree = "<group>"; };
 		CD1093561E935DB8006CE9A2 /* Pan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD10935A1E935DB8006CE9A2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CD10935C1E935DB8006CE9A2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -164,6 +167,8 @@
 				CD1093601E935DB8006CE9A2 /* ViewController.m */,
 				CD40066C1EAF3C9700385E87 /* recordVideoViewController.h */,
 				CD40066D1EAF3C9700385E87 /* recordVideoViewController.m */,
+				CD0915871EC826B700CA07C4 /* SignInViewController.h */,
+				CD0915881EC826B700CA07C4 /* SignInViewController.m */,
 				CD1093621E935DB8006CE9A2 /* Main.storyboard */,
 				CD0100471E9E477500DA9996 /* audioRecordViewController.h */,
 				CD0100481E9E477500DA9996 /* audioRecordViewController.m */,
@@ -503,6 +508,7 @@
 				CD10935E1E935DB8006CE9A2 /* AppDelegate.m in Sources */,
 				CD0100491E9E477500DA9996 /* audioRecordViewController.m in Sources */,
 				CD10935B1E935DB8006CE9A2 /* main.m in Sources */,
+				CD0915891EC826B700CA07C4 /* SignInViewController.m in Sources */,
 				CD40066E1EAF3C9700385E87 /* recordVideoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
