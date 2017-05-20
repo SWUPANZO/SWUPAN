@@ -8,10 +8,7 @@
 
 #import "SignInViewController.h"
 
-@interface SignInViewController (){
-    NSUInteger studentlength;
-    FIRDatabaseHandle _refHandle;
-}
+@interface SignInViewController (){}
 
 @end
 
@@ -36,18 +33,13 @@
 }
 
 - (void)dealloc {
-    [[ref child:@"student"] removeObserverWithHandle:_refHandle];
 }
 
 
 - (void)configureDatabase {
     ref = [[FIRDatabase database] reference];
     // Listen for new messages in the Firebase database
-    _refHandle = [[ref child:@"student"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot *snapshot) {
-        [students addObject:snapshot];
-        studentlength = students.count;
 
-    }];
 }
 
 
@@ -67,22 +59,24 @@
            [[self.signInPasswd text] isEqualToString:@""] ) {
         }
         else {
-            for(int i = 0; i < studentlength; i++){
-            FIRDataSnapshot *studentSnapshot = students[i];
-            NSDictionary<NSString *, NSString *> *stud = studentSnapshot.value;
-            NSLog(@"11111111111111%@", stud);
-            NSString *loginId = [NSString stringWithFormat:@"%@", [stud valueForKey:@"stdId"]];
-            NSString *loginPw = [NSString stringWithFormat:@"%@", [stud valueForKey:@"passwd"]];
-            NSString *liId = [signInId text];
-            NSString *liPw = [signInPasswd text];
-            if([loginId isEqualToString:liId] && [loginPw isEqualToString:liPw]){
-                    [self performSegueWithIdentifier:@"toLoginSuccess" sender:self];
-                    NSLog(@"pw%@", loginPw);
-                    NSLog(@"id%@", liPw);
-                NSLog(@"id%@", loginId);
-                NSLog(@"id%@", liId);
-            }
-            }
+            [[[ref child:@"Students"] child:[signInId text]] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                if (snapshot.value == [NSNull null]) {
+                    // The value is null
+                }
+                else{
+                    NSMutableDictionary *dict = snapshot.value;
+                    NSString *textPassword = [signInPasswd text];
+                    NSString *password = [dict valueForKey:@"passwd"];
+                    NSLog(@"password : %@ %@", textPassword, password);
+                    NSLog(@"%i", [textPassword isEqual:password]);
+                    if(textPassword == password){
+                        [self performSegueWithIdentifier:@"toLoginSuccess" sender:self];
+                    }
+                }
+            } withCancelBlock:^(NSError * _Nonnull error) {
+                NSLog(@"%@", error.localizedDescription);
+            }];
+            
         }
 }
 
