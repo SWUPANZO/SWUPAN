@@ -7,6 +7,7 @@
 //
 
 #import "SignInViewController.h"
+#import "ViewController.h"
 
 @interface SignInViewController (){}
 
@@ -78,6 +79,15 @@
             }];
             
         }
+}
+
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"toLoginSuccess"])
+    {
+        ViewController *imgVC = [segue destinationViewController];
+        imgVC.loginId = [signInId text];
+    }
 }
 
 

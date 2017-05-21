@@ -9,9 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-//fkfkfkfkfkfkfkdskkkssk
-//ajdoaisjdoisajdosajdjas
-
+@import Firebase;
 @interface ViewController : UIViewController <UIImagePickerControllerDelegate,
 UINavigationControllerDelegate, UIActionSheetDelegate>
 {
@@ -20,6 +18,12 @@ UINavigationControllerDelegate, UIActionSheetDelegate>
 }
 @property BOOL newMedia;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
+@property (strong, nonatomic) FIRDatabaseReference *ref;
+@property (strong, nonatomic) NSMutableArray<FIRDataSnapshot *> *album;
+@property (strong, nonatomic) FIRStorageReference *storageRef;
+@property (nonatomic, strong) FIRRemoteConfig *remoteConfig;
+
+@property (strong, nonatomic) NSString *loginId;
 
 - (IBAction)useCamera:(id)sender;
 - (IBAction)useCameraRoll:(id)sender;

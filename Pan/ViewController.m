@@ -18,10 +18,30 @@
 
 @synthesize imageView;
 @synthesize newMedia;
+@synthesize ref;
+@synthesize storageRef;
+@synthesize remoteConfig;
+@synthesize loginId;
+@synthesize album;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    [self configureDatabase];
+    [self configureStorage];
+    [self configureRemoteConfig];
+    // [self fetchConfig];
+    
+//    FIRDataSnapshot *messageSnapshot = album[indexPath.row];
+//    NSDictionary<NSString *, NSString *> *message = messageSnapshot.value;
+//    NSString *name = message[MessageFieldsname];
+//    NSString *imageURL = message[MessageFieldsimageURL];
+}
+
+
+- (void)configureDatabase {
+    ref = [[FIRDatabase database] reference];
 }
 
 
@@ -32,34 +52,6 @@
 
 
 - (IBAction)useCamera:(id)sender {
-    /*if ([UIImagePickerController isSourceTypeAvailable:
-         UIImagePickerControllerSourceTypeCamera])
-    {
-        UIImagePickerController *imagePicker =
-        [[UIImagePickerController alloc] init];
-        imagePicker.delegate = self;
-        imagePicker.sourceType =
-        UIImagePickerControllerSourceTypeCamera;
-        imagePicker.mediaTypes = [NSArray arrayWithObject: (NSString *) kUTTypeImage];
-        imagePicker.allowsEditing = NO;
-        [self presentViewController:imagePicker
-                           animated:YES completion:nil];
-        _newMedia = YES;
-    }*/
-//    if ([UIImagePickerController isSourceTypeAvailable:
-//         UIImagePickerControllerSourceTypeCamera])
-//    {
-//        UIImagePickerController *imagePicker =
-//        [[UIImagePickerController alloc] init];
-//        imagePicker.delegate = self;
-//        imagePicker.sourceType =
-//        UIImagePickerControllerSourceTypeCamera;
-//        imagePicker.mediaTypes = @[(NSString *) kUTTypeImage];
-//        imagePicker.allowsEditing = NO;
-//        [self presentViewController:imagePicker
-//                           animated:YES completion:nil];
-//        _newMedia = YES;
-//    }
     picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
     [picker setSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -67,11 +59,75 @@
     
 }
 
+//- (void)saveImage:(NSDictionary *)data {
+////    NSMutableDictionary *mdata = [data mutableCopy];
+////    mdata[] = ;
+////    mdata[imgURL] =
+////    NSURL *photoURL = [FIRAuth auth].currentUser.photoURL;
+////    if (photoURL) {
+////        mdata[MessageFieldsphotoURL] = [photoURL absoluteString];
+////    }
+//    
+//    NSMutableDictionary *imgDiction = [[NSMutableDictionary alloc] init];
+//    [imgDiction setObject:@"v1" forKey:@"k1"];
+//    
+//    
+//    [[[ref child:@"Week"] child:loginId] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+//        if (snapshot.value == [NSNull null]) {
+//            [ref setValue:@{loginId : @1}];
+//            [[[[ref child:@"Week"] child: loginId] child: @"album"] setValue:imgDiction];
+//        }
+//        else{
+//        
+//        }
+//    } withCancelBlock:^(NSError * _Nonnull error) {
+//        NSLog(@"%@", error.localizedDescription);
+//    }];
+//    
+//    
+//    // Push data to Firebase Database
+//    [[[[ref child:@"Week"] child: loginId] child: @"album"] setValue:mdata];
+//}
+
+
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     NSLog(@"data :%i",[UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]);
     image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     [imageView setImage:image];
+   
+    //image를 imagePicker에 저장하는 부분
     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+    
+    
+    NSData *imgData = UIImageJPEGRepresentation(image, 0.8);
+    NSString *imagePath =
+    [NSString stringWithFormat:@"%@/%lld.jpg",
+     loginId, (long long)([NSDate date].timeIntervalSince1970 * 1000.0)];
+    FIRStorageMetadata *metadata = [FIRStorageMetadata new];
+    metadata.contentType = @"image/jpeg";
+    [[storageRef child:imagePath] putData:imgData metadata:metadata
+                                completion:^(FIRStorageMetadata * _Nullable metadata, NSError * _Nullable error) {
+                                    if (error) {
+                                        NSLog(@"Error uploading: %@", error);
+                                        return;
+                                    }
+                                    NSMutableDictionary *imgDiction = [[NSMutableDictionary alloc] init];
+                                    NSString *capturedDate = [NSString stringWithFormat:@"%lld", (long long)([NSDate date].timeIntervalSince1970 * 1000.0)];
+                                    [imgDiction setObject:[storageRef child:metadata.path].description forKey:capturedDate];
+                                    //[self saveImage:@{(long long)([NSDate date].timeIntervalSince1970 * 1000.0):[storageRef child:metadata.path].description}];
+                                    [[[ref child:@"Week"] child:loginId] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
+                                        if (snapshot.value == [NSNull null]) {
+                                            [[[[ref child:@"Week"] child: loginId] child: @"album"] setValue:imgDiction];
+                                        }
+                                        else{
+                                            [[[[ref child:@"Week"] child: loginId] child: @"album"] setValue:imgDiction];
+                                        }
+                                    } withCancelBlock:^(NSError * _Nonnull error) {
+                                        NSLog(@"%@", error.localizedDescription);
+                                    }];
+
+                                }];
+
     
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -93,33 +149,20 @@
     }
 }
 
+- (void)configureRemoteConfig {
+    remoteConfig = [FIRRemoteConfig remoteConfig];
+    // Create Remote Config Setting to enable developer mode.
+    // Fetching configs from the server is normally limited to 5 requests per hour.
+    // Enabling developer mode allows many more requests to be made per hour, so developers
+    // can test different config values during development.
+    FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] initWithDeveloperModeEnabled:YES];
+    self.remoteConfig.configSettings = remoteConfigSettings;
+}
 
+- (void)configureStorage {
+    self.storageRef = [[FIRStorage storage] reference];
+}
 
-//#pragma mark -
-//#pragma mark UIImagePickerControllerDelegate
-//
-//-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-//{
-//    NSString *mediaType = info[UIImagePickerControllerMediaType];
-//    
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//    
-//    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
-//        UIImage *image = info[UIImagePickerControllerOriginalImage];
-//        
-//        _imageView.image = image;
-//        if (_newMedia)
-//            UIImageWriteToSavedPhotosAlbum(image,
-//                                           self,
-//                                           @selector(image:finishedSavingWithError:contextInfo:),
-//                                           nil);
-//    }
-//    else if ([mediaType isEqualToString:(NSString *)kUTTypeMovie])
-//    {
-//        // Code here to support video if enabled
-//    }
-//    
-//}
 
 -(void)image:(UIImage *)image
 finishedSavingWithError:(NSError *)error
