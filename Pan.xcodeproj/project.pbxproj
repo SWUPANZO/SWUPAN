@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		54D02AC467A04D84F7C2A736 /* libPods-PanTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1896AE5319BE81767667F3E1 /* libPods-PanTests.a */; };
+		97F244B11ED425C300E13C6A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 97F244B01ED425C300E13C6A /* GoogleService-Info.plist */; };
 		A5980AD1D188E7882130595D /* libPods-PanUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B69C077153083D3C324F64A /* libPods-PanUITests.a */; };
 		BC764B3CD8DF8B4F2317548B /* libPods-Pan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 588A9713C4A9E47015CEBDD5 /* libPods-Pan.a */; };
-		CD00899A1EC199FF00583FA6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CD0089991EC199FF00583FA6 /* GoogleService-Info.plist */; };
 		CD0100431E9E3D3E00DA9996 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD0100421E9E3D3E00DA9996 /* AVFoundation.framework */; };
 		CD0100491E9E477500DA9996 /* audioRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0100481E9E477500DA9996 /* audioRecordViewController.m */; };
 		CD0528DA1ECD765800001820 /* weekViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0528D91ECD765800001820 /* weekViewController.m */; };
@@ -57,7 +57,7 @@
 		30780842E2E4541C29F7F8FE /* Pods-PanUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PanUITests/Pods-PanUITests.release.xcconfig"; sourceTree = "<group>"; };
 		588A9713C4A9E47015CEBDD5 /* libPods-Pan.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pan.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B69C077153083D3C324F64A /* libPods-PanUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PanUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CD0089991EC199FF00583FA6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		97F244B01ED425C300E13C6A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../캡스톤/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CD0100421E9E3D3E00DA9996 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CD0100471E9E477500DA9996 /* audioRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audioRecordViewController.h; sourceTree = "<group>"; };
 		CD0100481E9E477500DA9996 /* audioRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = audioRecordViewController.m; sourceTree = "<group>"; };
@@ -141,7 +141,7 @@
 		CD10934D1E935DB7006CE9A2 = {
 			isa = PBXGroup;
 			children = (
-				CD0089991EC199FF00583FA6 /* GoogleService-Info.plist */,
+				97F244B01ED425C300E13C6A /* GoogleService-Info.plist */,
 				CD1093581E935DB8006CE9A2 /* Pan */,
 				CD1093721E935DB8006CE9A2 /* PanTests */,
 				CD10937D1E935DB8006CE9A2 /* PanUITests */,
@@ -344,7 +344,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD1093691E935DB8006CE9A2 /* LaunchScreen.storyboard in Resources */,
-				CD00899A1EC199FF00583FA6 /* GoogleService-Info.plist in Resources */,
+				97F244B11ED425C300E13C6A /* GoogleService-Info.plist in Resources */,
 				CD1093661E935DB8006CE9A2 /* Assets.xcassets in Resources */,
 				CD1093641E935DB8006CE9A2 /* Main.storyboard in Resources */,
 			);
