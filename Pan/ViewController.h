@@ -19,6 +19,7 @@ UINavigationControllerDelegate, UIActionSheetDelegate>
 @property BOOL newMedia;
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) FIRDatabaseReference *ref;
+@property (strong, nonatomic) NSMutableArray<FIRDataSnapshot *> *week;
 @property (strong, nonatomic) NSMutableArray<FIRDataSnapshot *> *album;
 @property (strong, nonatomic) FIRStorageReference *storageRef;
 @property (nonatomic, strong) FIRRemoteConfig *remoteConfig;

@@ -303,7 +303,7 @@
 				TargetAttributes = {
 					CD1093551E935DB7006CE9A2 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = P7S7MRR68W;
+						DevelopmentTeam = 2K97JK6ZSZ;
 						ProvisioningStyle = Automatic;
 					};
 					CD10936E1E935DB8006CE9A2 = {
@@ -663,7 +663,7 @@
 			baseConfigurationReference = 1CF5A4FB8A338DD0DD775117 /* Pods-Pan.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = P7S7MRR68W;
+				DEVELOPMENT_TEAM = 2K97JK6ZSZ;
 				INFOPLIST_FILE = Pan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = swu.ac.kr.Pan;
@@ -676,7 +676,7 @@
 			baseConfigurationReference = 1FD3DEABF26BB2E6BDF31F6C /* Pods-Pan.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = P7S7MRR68W;
+				DEVELOPMENT_TEAM = 2K97JK6ZSZ;
 				INFOPLIST_FILE = Pan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = swu.ac.kr.Pan;

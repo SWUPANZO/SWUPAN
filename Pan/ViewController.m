@@ -10,7 +10,10 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
+@interface ViewController (){
+    FIRDatabaseHandle _refHandle;
+    NSUInteger _weekLength;
+}
 
 @end
 
@@ -23,25 +26,29 @@
 @synthesize remoteConfig;
 @synthesize loginId;
 @synthesize album;
+@synthesize week;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+    week = [[NSMutableArray alloc] init];
     [self configureDatabase];
     [self configureStorage];
     [self configureRemoteConfig];
     // [self fetchConfig];
-    
-//    FIRDataSnapshot *messageSnapshot = album[indexPath.row];
-//    NSDictionary<NSString *, NSString *> *message = messageSnapshot.value;
-//    NSString *name = message[MessageFieldsname];
-//    NSString *imageURL = message[MessageFieldsimageURL];
 }
 
 
 - (void)configureDatabase {
     ref = [[FIRDatabase database] reference];
+    
+    _refHandle = [[ref child:@"AcademicCalendar"] observeEventType:FIRDataEventTypeChildAdded withBlock:^(FIRDataSnapshot *snapshot) {
+        [week addObject:snapshot];
+        
+        _weekLength = week.count;
+    }];
+
 }
 
 
@@ -59,50 +66,14 @@
     
 }
 
-//- (void)saveImage:(NSDictionary *)data {
-////    NSMutableDictionary *mdata = [data mutableCopy];
-////    mdata[] = ;
-////    mdata[imgURL] =
-////    NSURL *photoURL = [FIRAuth auth].currentUser.photoURL;
-////    if (photoURL) {
-////        mdata[MessageFieldsphotoURL] = [photoURL absoluteString];
-////    }
-//    
-//    NSMutableDictionary *imgDiction = [[NSMutableDictionary alloc] init];
-//    [imgDiction setObject:@"v1" forKey:@"k1"];
-//    
-//    
-//    [[[ref child:@"Week"] child:loginId] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-//        if (snapshot.value == [NSNull null]) {
-//            [ref setValue:@{loginId : @1}];
-//            [[[[ref child:@"Week"] child: loginId] child: @"album"] setValue:imgDiction];
-//        }
-//        else{
-//        
-//        }
-//    } withCancelBlock:^(NSError * _Nonnull error) {
-//        NSLog(@"%@", error.localizedDescription);
-//    }];
-//    
-//    
-//    // Push data to Firebase Database
-//    [[[[ref child:@"Week"] child: loginId] child: @"album"] setValue:mdata];
-//}
-
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
     NSLog(@"data :%i",[UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]);
     image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
     [imageView setImage:image];
    
-    //image를 imagePicker에 저장하는 부분
-    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
-    
-    
     NSData *imgData = UIImageJPEGRepresentation(image, 0.8);
-    NSString *imagePath =
-    [NSString stringWithFormat:@"%@/%lld.jpg",
-     loginId, (long long)([NSDate date].timeIntervalSince1970 * 1000.0)];
+    NSString *imagePath = [NSString stringWithFormat:@"%@/%lld.jpg", loginId, (long long)([NSDate date].timeIntervalSince1970 * 1000.0)];
     FIRStorageMetadata *metadata = [FIRStorageMetadata new];
     metadata.contentType = @"image/jpeg";
     [[storageRef child:imagePath] putData:imgData metadata:metadata
@@ -111,21 +82,35 @@
                                         NSLog(@"Error uploading: %@", error);
                                         return;
                                     }
+                                    NSDate *currentDate = [NSDate date];
+                                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                                    [dateFormatter setDateFormat:@"yyyyMMddHHmmss"];
+                                    NSTimeZone *krTimeZone =[NSTimeZone timeZoneWithName:@"Asia/Seoul"];
+                                    [dateFormatter setTimeZone:krTimeZone];
+                                    NSString *krDate = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:currentDate]];
+                                    
                                     NSMutableDictionary *imgDiction = [[NSMutableDictionary alloc] init];
-                                    NSString *capturedDate = [NSString stringWithFormat:@"%lld", (long long)([NSDate date].timeIntervalSince1970 * 1000.0)];
+                                    NSString *capturedDate = [NSString stringWithFormat:@"%@", krDate];
                                     [imgDiction setObject:[storageRef child:metadata.path].description forKey:capturedDate];
-                                    //[self saveImage:@{(long long)([NSDate date].timeIntervalSince1970 * 1000.0):[storageRef child:metadata.path].description}];
-                                    [[[ref child:@"Week"] child:loginId] observeSingleEventOfType:FIRDataEventTypeValue withBlock:^(FIRDataSnapshot * _Nonnull snapshot) {
-                                        if (snapshot.value == [NSNull null]) {
-                                            [[[[ref child:@"Week"] child: loginId] child: @"album"] setValue:imgDiction];
+                                  
+                                    FIRDataSnapshot *beforeWeekSnapshot = nil;
+                                    NSString *beforeWeekDate;
+                                    for(int i = 0; i < _weekLength; i++){
+                                        FIRDataSnapshot *weekSnapshot = week[i];
+                                        NSString *weekDate = weekSnapshot.value;
+                                        NSString *subString = [krDate substringWithRange:NSMakeRange(0, 8)];
+                                        
+                                        if(beforeWeekSnapshot != nil){
+                                            if([subString integerValue] > [beforeWeekDate integerValue] && [subString integerValue] < [weekDate integerValue]){
+                                                [[[[[[ref child:@"Week"] child: loginId] child: weekSnapshot.key] child: @"album"] childByAutoId] setValue:imgDiction];
+                                                NSLog(@"week save : %@", weekSnapshot.key);
+                                                i = 100;
+                                            }
                                         }
-                                        else{
-                                            [[[[ref child:@"Week"] child: loginId] child: @"album"] setValue:imgDiction];
-                                        }
-                                    } withCancelBlock:^(NSError * _Nonnull error) {
-                                        NSLog(@"%@", error.localizedDescription);
-                                    }];
-
+                                        beforeWeekSnapshot = weekSnapshot;
+                                        beforeWeekDate = beforeWeekSnapshot.value;
+                                    }
+                                    
                                 }];
 
     
@@ -151,10 +136,7 @@
 
 - (void)configureRemoteConfig {
     remoteConfig = [FIRRemoteConfig remoteConfig];
-    // Create Remote Config Setting to enable developer mode.
-    // Fetching configs from the server is normally limited to 5 requests per hour.
-    // Enabling developer mode allows many more requests to be made per hour, so developers
-    // can test different config values during development.
+    
     FIRRemoteConfigSettings *remoteConfigSettings = [[FIRRemoteConfigSettings alloc] initWithDeveloperModeEnabled:YES];
     self.remoteConfig.configSettings = remoteConfigSettings;
 }
