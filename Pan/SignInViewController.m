@@ -8,6 +8,7 @@
 
 #import "SignInViewController.h"
 #import "ViewController.h"
+#import "imageCollecitonViewController.h"
 
 @interface SignInViewController (){}
 
@@ -68,8 +69,6 @@
                     NSMutableDictionary *dict = snapshot.value;
                     NSString *textPassword = [signInPasswd text];
                     NSString *password = [dict valueForKey:@"passwd"];
-                    NSLog(@"password : %@ %@", textPassword, password);
-                    NSLog(@"%i", [textPassword isEqual:password]);
                     if(textPassword == password){
                         [self performSegueWithIdentifier:@"toLoginSuccess" sender:self];
                     }
@@ -87,6 +86,10 @@
     {
         ViewController *imgVC = [segue destinationViewController];
         imgVC.loginId = [signInId text];
+        
+//        ViewController *collectionVC = [[ViewController alloc] initWithNib:@"imageCollectionViewController" bundle:nil];
+//        collectionVC.loginId = [signInId text];
+
     }
 }
 
